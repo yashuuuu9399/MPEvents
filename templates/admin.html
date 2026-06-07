@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>MP Events</title>
+
+    <!-- CSS -->
+<link rel="stylesheet"
+href="{{ url_for('static', filename='css/style.css') }}">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+   href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+</head>
+<body>
+
+    <!-- ================= NAVBAR ================= -->
+
+    <header>
+
+<nav class="navbar">
+
+    <!-- Logo -->
+
+<div class="logo">
+
+    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="">
+
+    <span>MP Events</span>
+
+</div>
+
+<ul class="nav-links">
+
+    <li><a href="{{ url_for('home') }}" class="active-link">Home</a></li>
+
+    <li><a href="{{ url_for('events') }}">Events</a></li>
+
+    <li><a href="{{ url_for('services') }}">Services</a></li>
+
+    <li><a href="{{ url_for('gallery') }}">Gallery</a></li>
+
+    <li><a href="{{ url_for('about') }}">About</a></li>
+
+    <li><a href="{{ url_for('contact') }}">Contact</a></li>
+
+</ul>
+
+    <!-- Right Side -->
+
+<div class="nav-right">
+
+    <button class="book-btn">
+        Book Now
+    </button>
+
+    
+    <div class="profile-wrapper active">
+
+        <div class="profile-icon">
+
+            <i class="fa-regular fa-user"></i>
+
+        </div>
+
+        <!-- PROFILE MENU -->
+
+<div class="profile-menu">
+
+{% if session.get('user_id') %}
+
+    <a href="#">
+        <i class="fa-regular fa-user"></i>
+        Hello, {{ session['user_name'] }}
+    </a>
+
+    <a href="{{ url_for('logout') }}">
+        <i class="fa-solid fa-right-from-bracket"></i>
+        Logout
+    </a>
+
+{% else %}
+
+    <a href="{{ url_for('signin') }}">
+        <i class="fa-solid fa-right-to-bracket"></i>
+        Sign In
+    </a>
+
+    <a href="{{ url_for('signup') }}">
+        <i class="fa-regular fa-user"></i>
+        Sign Up
+    </a>
+
+{% endif %}
+
+    <a href="{{ url_for('admin') }}">
+        <i class="fa-solid fa-table-cells-large"></i>
+        Admin Panel
+    </a>
+
+</div>
+    </div>
+
+</div>
+<!-- Hamburger -->
+
+<div class="menu-toggle">
+    <i class="fa-solid fa-bars"></i>
+</div>
+</nav>  
+  </header>
+
+  <section class="admin-dashboard">
+    <!-- DASHBOARD HEADER -->
+
+    <div class="dashboard-header">
+  
+      <div class="dashboard-title">
+  
+        <h1>Admin Dashboard</h1>
+  
+        <p>
+          Manage events, bookings, and users
+        </p>
+  
+      </div>
+  
+      <div class="dashboard-buttons">
+
+        <button class="view-btn" href='{{ url_for('gallery') }}'">
+          View Site
+        </button>
+  
+<a href="{{ url_for('add_event') }}"
+class="add-btn">
+
+    + Add Event
+
+</a>  
+  
+      </div>
+  
+    </div>
+  
+    <!-- STATS -->
+  
+    <div class="stats-grid">
+
+  
+      <!-- CARD 1 -->
+  
+      <div class="stat-card">
+  
+        <div class="stat-icon blue">
+  
+          <i class="fa-regular fa-calendar"></i>
+  
+        </div>
+  
+        <h2>{{ total_events }}</h2>
+  
+        <p>Total Events</p>
+  
+      </div>
+  
+      <!-- CARD 2 -->
+  
+      <div class="stat-card">
+  
+        <div class="stat-icon green">
+  
+          <i class="fa-solid fa-ticket"></i>
+  
+        </div>
+  
+        <h2>{{ total_bookings }}</h2>
+  
+        <p>Active Bookings</p>
+  
+      </div>
+  
+      <!-- CARD 3 -->
+  
+      <div class="stat-card">
+  
+        <div class="stat-icon purple">
+  
+          <i class="fa-regular fa-user"></i>
+  
+        </div>
+  
+        <h2>{{ total_users }}</h2>
+  
+        <p>Total Users</p>
+  
+      </div>
+  
+      <!-- CARD 4 -->
+  
+      <div class="stat-card">
+  
+        <div class="stat-icon orange">
+  
+          <i class="fa-solid fa-indian-rupee-sign"></i>
+  
+        </div>
+
+        <h2>Rs. {{ revenue }}</h2>
+
+        <p>Revenue</p>
+  
+      </div>
+  
+    </div>
+  
+    <!-- TABLE SECTION -->
+  
+    <div class="table-section">
+  
+      <!-- TABS -->
+  
+<div class="table-tabs">
+
+    <button id="events-tab" class="active">
+        <i class="fa-regular fa-calendar"></i> Events
+    </button>
+
+    <button id="bookings-tab">
+        <i class="fa-solid fa-ticket"></i> Bookings
+    </button>
+
+    <button id="users-tab">
+        <i class="fa-regular fa-user"></i> Users
+    </button>
+   <button id="messages-tab">
+    <i class="fa-regular fa-envelope"></i> Messages
+</button>
+    <button id="analytics-tab">
+        <i class="fa-solid fa-chart-simple"></i> Analytics
+    </button>
+
+</div>
+<div id="events-section">
+
+      <!-- TOP -->
+
+  
+      <div class="table-top">
+  
+        <h3>All Events</h3>
+  
+<div class="search-filter">
+
+    <input type="text"
+    id="search-input"
+    placeholder="Search events...">
+
+    <select id="category-filter"
+    class="filter-btn">
+
+        <option value="all">
+            All Categories
+        </option>
+
+        <option value="Cultural">
+            Cultural
+        </option>
+
+        <option value="Music">
+            Music
+        </option>
+
+        <option value="Religious">
+            Religious
+        </option>
+
+        <option value="Heritage">
+            Heritage
+        </option>
+
+        <option value="Nature">
+            Nature
+        </option>
+
+        <option value="Food">
+            Food
+        </option>
+
+        <option value="Literature">
+            Literature
+        </option>
+
+    </select>
+
+</div>  
+      </div>
+  
+      <!-- TABLE -->  
+      <div class="table-wrapper">
+  
+        <table>
+  
+          <thead>
+  
+            <tr>
+  
+              <th>Event</th>
+              <th>Date</th>
+              <th>Location</th>
+              <th>Category</th>
+              <th>Price</th>
+              <th>Status</th>
+              <th>Actions</th>
+  
+            </tr>
+  
+          </thead>
+          <tbody>
+
+{% for event in events %}
+
+<tr>
+
+    <td>
+        <div class="event-info">
+
+        <img src="{{ url_for('static', filename='uploads/' + event.image) }}">
+
+            <span>{{ event.name }}</span>
+
+        </div>
+    </td>
+
+    <td>{{ event.date }}</td>
+
+    <td>{{ event.location }}</td>
+
+    <td>
+        <span class="category">
+            {{ event.category }}
+        </span>
+    </td>
+
+    <td>{{ event.price }}</td>
+
+    <td>
+        <span class="status">
+            Active
+        </span>
+    </td>
+
+    <td>
+        <div class="actions">
+
+<a href="{{ url_for('edit_event', id=event.id) }}">
+    <i class="fa-solid fa-pen"></i>
+</a>
+
+<a href="{{ url_for('delete_event', id=event.id) }}"
+   onclick="return confirm('Delete this event?')">
+
+    <i class="fa-regular fa-trash-can"></i>
+
+</a>       
+
+</div>
+    </td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+  
+  
+        </table>
+  
+      </div>
+  
+    </div>
+    <div id="bookings-section" style="display:none;">
+
+    <h3>Recent Bookings</h3>
+
+    <div class="table-wrapper">
+
+        <table>
+
+    <thead>
+
+        <tr>
+
+            <th>Name</th>
+            <th>Event</th>
+            <th>Tickets</th>
+            <th>Phone</th>
+            <th>Email</th>
+
+        </tr>
+
+    </thead>
+
+    <tbody>
+
+        {% for booking in bookings %}
+
+        <tr>
+
+            <td>{{ booking.name }}</td>
+
+            <td>{{ booking.event_name }}</td>
+
+            <td>{{ booking.tickets }}</td>
+
+            <td>{{ booking.phone }}</td>
+
+            <td>{{ booking.email }}</td>
+
+        </tr>
+
+        {% endfor %}
+
+    </tbody>
+
+</table>
+
+    </div>
+
+</div>
+<div id="users-section" style="display:none;">
+
+    <h3>Registered Users</h3>
+
+    <div class="table-wrapper">
+
+        <!-- users table -->
+         <table>
+
+<thead>
+
+<tr>
+
+<th>Name</th>
+<th>Email</th>
+<th>Phone</th>
+<th>Role</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for user in users %}
+
+<tr>
+
+<td>{{ user.name }}</td>
+
+<td>{{ user.email }}</td>
+
+<td>{{ user.phone }}</td>
+
+<td>{{ user.role }}</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+
+    </div>
+
+</div>
+<div id="messages-section" style="display: none;">
+
+    <div class="table-top">
+
+        <h3>Contact Messages</h3>
+
+    </div>
+
+    <div class="table-wrapper">
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Subject</th>
+                    <th>Message</th>
+                    <th>Action</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+            {% for message in messages %}
+
+                <tr>
+
+                    <td>{{ message.name }}</td>
+
+                    <td>{{ message.email }}</td>
+
+                    <td>{{ message.phone }}</td>
+
+                    <td>{{ message.subject }}</td>
+
+                    <td>{{ message.message }}</td>
+
+
+                </tr>
+
+            {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+<div id="analytics-section" style="display:none;">
+
+    <h3>Analytics</h3>
+
+    <div class="stats-grid">
+
+        <div class="stat-card">
+            <h2>{{ total_events }}</h2>
+            <p>Total Events</p>
+        </div>
+
+        <div class="stat-card">
+            <h2>{{ total_bookings }}</h2>
+            <p>Total Bookings</p>
+        </div>
+
+        <div class="stat-card">
+            <h2>{{ total_users }}</h2>
+            <p>Total Users</p>
+        </div>
+
+        <div class="stat-card">
+            <h2>Rs. {{ revenue }}</h2>
+            <p>Total Revenue</p>
+        </div>
+
+    </div>
+    </div>
+
+  </section>
+<!-- ================= FOOTER ================= -->
+
+<footer>
+
+
+    <!-- ================= FOOTER TOP ================= -->
+
+    <div class="footer-top">
+
+
+        <!-- Explore Column -->
+
+        <div class="footer-column">
+
+            <h3>
+
+                Explore
+
+            </h3>
+
+
+            <ul>
+
+                <li>
+
+<a href="{{ url_for('events') }}">
+    All Events
+</a>
+
+                </li>
+
+                <li>
+
+<a href="{{ url_for('events') }}">
+    Cultural Festivals
+</a>
+
+                </li>
+
+                <li>
+
+<a href="{{ url_for('events') }}">
+    Government Events
+</a>
+
+                </li>
+
+                <li>
+
+<a href="{{ url_for('events') }}">
+    Tourism Experiences
+</a>
+                </li>
+
+            </ul>
+
+        </div>
+
+
+
+        <!-- Services Column -->
+
+        <div class="footer-column">
+
+            <h3>
+
+                Services
+
+            </h3>
+
+
+            <ul>
+
+                <li>
+
+                    <a href="#">
+
+                        Event Planning
+
+                    </a>
+
+                </li>
+
+                <li>
+
+                    <a href="#">
+
+                        Venue Booking
+
+                    </a>
+
+                </li>
+
+                <li>
+
+                    <a href="#">
+
+                        Catering
+
+                    </a>
+
+                </li>
+
+                <li>
+
+                    <a href="#">
+
+                        Decorations
+
+                    </a>
+
+                </li>
+
+            </ul>
+
+        </div>
+
+
+
+        <!-- Company Column -->
+
+        <div class="footer-column">
+
+            <h3>
+
+                Company
+
+            </h3>
+
+
+            <ul>
+
+                <li>
+
+                    <a href="{{url_for('about')}}">
+
+                        About Us
+
+                    </a>
+
+                </li>
+
+                <li>
+
+                    <a href="{{url_for('gallery')}}">
+
+                        Gallery
+
+                    </a>
+
+                </li>
+
+                <li>
+
+                    <a href="{{url_for('contact')}}">
+
+                        Contact
+
+                    </a>
+
+                </li>
+
+                <li>
+
+                    <a href="#">
+
+                        Careers
+
+                    </a>
+
+                </li>
+
+            </ul>
+
+        </div>
+
+
+
+        <!-- Support Column -->
+
+        <div class="footer-column">
+
+            <h3>
+
+                Support
+
+            </h3>
+
+
+            <ul>
+
+                <li>
+
+                    <a href="#">
+
+                        Help Center
+
+                    </a>
+
+                </li>
+
+                <li>
+
+                    <a href="#">
+
+                        Privacy Policy
+
+                    </a>
+
+                </li>
+
+                <li>
+
+                    <a href="#">
+
+                        Terms of Service
+
+                    </a>
+
+                </li>
+
+                <li>
+
+                    <a href="#">
+
+                        Accessibility
+
+                    </a>
+
+                </li>
+
+            </ul>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ================= FOOTER BOTTOM ================= -->
+
+    <div class="footer-bottom">
+
+
+        <!-- Footer Logo -->
+
+        <div class="footer-logo">
+
+
+            <div class="footer-logo-circle">
+
+<img src="{{ url_for('static', filename='images/logo.png') }}">
+            </div>
+
+
+            <h2>
+
+                MP Events
+
+            </h2>
+
+        </div>
+
+
+
+        <!-- Copyright -->
+
+        <div class="copyright">
+
+            © 2026 Madhya Pradesh Event Portal.
+            All rights reserved.
+
+        </div>
+
+
+
+        <!-- Social Icons -->
+
+        <div class="social-icons">
+
+
+            <a href="#">
+
+                <i class="fa-brands fa-facebook-f"></i>
+
+            </a>
+
+
+            <a href="#">
+
+                <i class="fa-brands fa-instagram"></i>
+
+            </a>
+
+
+            <a href="#">
+
+                <i class="fa-brands fa-x-twitter"></i>
+
+            </a>
+
+
+            <a href="#">
+
+                <i class="fa-brands fa-linkedin-in"></i>
+
+            </a>
+
+        </div>
+
+    </div>
+
+</footer>
+<script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+</body>
+</html>

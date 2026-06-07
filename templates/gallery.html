@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Gallery | MP Events</title>
+
+    <!-- CSS -->
+<link rel="stylesheet"
+href="{{ url_for('static', filename='css/style.css') }}">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+   href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+</head>
+<body>
+
+    <!-- ================= NAVBAR ================= -->
+
+    <header>
+
+<nav class="navbar">
+
+    <!-- Logo -->
+
+<div class="logo">
+
+    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="">
+
+    <span>MP Events</span>
+
+</div>
+
+<ul class="nav-links">
+
+    <li><a href="{{ url_for('home') }}">Home</a></li>
+
+    <li><a href="{{ url_for('events') }}">Events</a></li>
+
+    <li><a href="{{ url_for('services') }}">Services</a></li>
+
+    <li><a href="{{ url_for('gallery') }}" class="active-link">Gallery</a></li>
+
+    <li><a href="{{ url_for('about') }}">About</a></li>
+
+    <li><a href="{{ url_for('contact') }}">Contact</a></li>
+
+</ul>
+
+    <!-- Right Side -->
+
+<div class="nav-right">
+
+    <button class="book-btn">
+        Book Now
+    </button>
+
+            <div class="profile-wrapper">
+
+        <div class="profile-icon">
+
+            <i class="fa-regular fa-user"></i>
+
+        </div>
+
+        <!-- PROFILE MENU -->
+
+<div class="profile-menu">
+
+{% if session.get('user_id') %}
+
+    <a href="#">
+        <i class="fa-regular fa-user"></i>
+        Hello, {{ session['user_name'] }}
+    </a>
+
+    <a href="{{ url_for('logout') }}">
+        <i class="fa-solid fa-right-from-bracket"></i>
+        Logout
+    </a>
+
+{% else %}
+
+    <a href="{{ url_for('signin') }}">
+        <i class="fa-solid fa-right-to-bracket"></i>
+        Sign In
+    </a>
+
+    <a href="{{ url_for('signup') }}">
+        <i class="fa-regular fa-user"></i>
+        Sign Up
+    </a>
+
+{% endif %}
+
+    <a href="{{ url_for('admin') }}">
+        <i class="fa-solid fa-table-cells-large"></i>
+        Admin Panel
+    </a>
+
+</div>
+    </div>
+
+</div>
+
+<!-- Hamburger -->
+
+<div class="menu-toggle">
+    <i class="fa-solid fa-bars"></i>
+</div>
+</nav>  
+  </header>
+<!-- ================= GALLERY HERO ================= -->
+
+<section class="gallery-hero">
+
+    <!-- OVERLAY -->
+
+    <div class="gallery-overlay"></div>
+
+    <!-- CONTENT -->
+
+    <div class="gallery-hero-content">
+
+        <h1>
+
+            Gallery
+
+        </h1>
+
+        <p>
+
+            A visual journey through the events
+            and landscapes of Madhya Pradesh.
+
+        </p>
+
+    </div>
+
+</section>
+<!-- ================= FILTER BUTTONS ================= -->
+
+<div class="gallery-filters">
+
+    <button class="active-filter" data-filter="all">
+        All
+    </button>
+
+    <button data-filter="heritage">Heritage</button>
+
+    <button data-filter="culture">Culture</button>
+
+    <button data-filter="religious">Religious</button>
+
+    <button data-filter="nature">Nature</button>
+
+    <button data-filter="food">Food</button>
+
+    <button data-filter="events">Events</button>
+
+</div>
+
+<!-- ================= TOP ROW ================= -->
+
+<div class="gallery-page-top">
+
+    <!-- CARD 1 -->
+
+<div class="gallery-page-card large" data-category="heritage">
+        <img src="{{ url_for('static', filename='images/Khajuraho.png') }}">
+
+        <div class="gallery-page-overlay">
+
+            <span>HERITAGE</span>
+
+            <h3>Khajuraho Temples</h3>
+
+        </div>
+
+    </div>
+
+    <!-- CARD 2 -->
+
+<div class="gallery-page-card large" data-category="religious">
+<img src="{{ url_for('static', filename='images/arti.png') }}">
+
+        <div class="gallery-page-overlay">
+
+            <span>RELIGIOUS</span>
+
+            <h3>Mahakal Aarti</h3>
+
+        </div>
+
+    </div>
+
+    <!-- CARD 3 -->
+
+<div class="gallery-page-card large" data-category="events">
+<img src="{{ url_for('static', filename='images/decoration.png') }}">
+
+        <div class="gallery-page-overlay">
+
+            <span>EVENTS</span>
+
+            <h3>Traditional Wedding Setup</h3>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ================= BOTTOM ROW ================= -->
+
+<div class="gallery-page-bottom">
+
+    <!-- CARD 4 -->
+
+<div class="gallery-page-card small" data-category="heritage">
+<img src="{{ url_for('static', filename='images/gwalior-fort.png') }}">
+
+        <div class="gallery-page-overlay">
+
+            <span>HERITAGE</span>
+
+            <h3>Gwalior Fort</h3>
+
+        </div>
+
+    </div>
+
+    <!-- CARD 5 -->
+
+    <div class="gallery-page-card small" data-category="nature">
+<img src="{{ url_for('static', filename='images/jungle.png') }}">
+
+        <div class="gallery-page-overlay">
+
+            <span>NATURE</span>
+
+            <h3>Bandhavgarh Safari</h3>
+
+        </div>
+
+    </div>
+
+    <!-- CARD 6 -->
+
+    <div class="gallery-page-card small" data-category="food">
+
+<img src="{{ url_for('static', filename='images/indore.png') }}">
+
+        <div class="gallery-page-overlay">
+
+            <span>FOOD</span>
+
+            <h3>Indore Night Market</h3>
+
+        </div>
+
+    </div>
+
+    <!-- CARD 7 -->
+
+    <div class="gallery-page-card small" data-category="culture">
+
+<img src="{{ url_for('static', filename='images/dance.png') }}">
+
+        <div class="gallery-page-overlay">
+
+            <span>CULTURE</span>
+
+            <h3>Folk Dance Performance</h3>
+
+        </div>
+
+    </div>
+
+    <!-- CARD 8 -->
+
+    <div class="gallery-page-card small" data-category="heritage">
+
+<img src="{{ url_for('static', filename='images/sanchi.png') }}">
+
+        <div class="gallery-page-overlay">
+
+            <span>HERITAGE</span>
+
+            <h3>Sanchi Stupa</h3>
+
+        </div>
+
+    </div>
+
+    <!-- CARD 9 -->
+
+    <div class="gallery-page-card small" data-category="nature">
+
+<img src="{{ url_for('static', filename='images/bhedaghat.png') }}">
+
+        <div class="gallery-page-overlay">
+
+            <span>NATURE</span>
+
+            <h3>Marble Rocks Bhedaghat</h3>
+
+        </div>
+
+    </div>
+
+</div>
+<!-- ================= FOOTER ================= -->
+
+<footer>
+
+
+    <!-- ================= FOOTER TOP ================= -->
+
+    <div class="footer-top">
+
+
+        <!-- Explore Column -->
+
+        <div class="footer-column">
+
+            <h3>
+
+                Explore
+
+            </h3>
+
+
+            <ul>
+
+                <li>
+
+<a href="{{ url_for('events') }}">
+    All Events
+</a>
+
+                </li>
+
+                <li>
+
+<a href="{{ url_for('events') }}">
+    Cultural Festivals
+</a>
+
+                </li>
+
+                <li>
+
+<a href="{{ url_for('events') }}">
+    Government Events
+</a>
+
+                </li>
+
+                <li>
+
+<a href="{{ url_for('events') }}">
+    Tourism Experiences
+</a>
+                </li>
+
+            </ul>
+
+        </div>
+
+
+
+        <!-- Services Column -->
+
+        <div class="footer-column">
+
+            <h3>
+
+                Services
+
+            </h3>
+
+
+            <ul>
+
+                <li>
+
+                    <a href="#">
+
+                        Event Planning
+
+                    </a>
+
+                </li>
+
+                <li>
+
+                    <a href="#">
+
+                        Venue Booking
+
+                    </a>
+
+                </li>
+
+                <li>
+
+                    <a href="#">
+
+                        Catering
+
+                    </a>
+
+                </li>
+
+                <li>
+
+                    <a href="#">
+
+                        Decorations
+
+                    </a>
+
+                </li>
+
+            </ul>
+
+        </div>
+
+
+
+        <!-- Company Column -->
+
+        <div class="footer-column">
+
+            <h3>
+
+                Company
+
+            </h3>
+
+
+            <ul>
+
+                <li>
+
+                    <a href="{{url_for('about')}}">
+
+                        About Us
+
+                    </a>
+
+                </li>
+
+                <li>
+
+                    <a href="{{url_for('gallery')}}">
+
+                        Gallery
+
+                    </a>
+
+                </li>
+
+                <li>
+
+                    <a href="{{url_for('contact')}}">
+
+                        Contact
+
+                    </a>
+
+                </li>
+
+                <li>
+
+                    <a href="#">
+
+                        Careers
+
+                    </a>
+
+                </li>
+
+            </ul>
+
+        </div>
+
+
+
+        <!-- Support Column -->
+
+        <div class="footer-column">
+
+            <h3>
+
+                Support
+
+            </h3>
+
+
+            <ul>
+
+                <li>
+
+                    <a href="#">
+
+                        Help Center
+
+                    </a>
+
+                </li>
+
+                <li>
+
+                    <a href="#">
+
+                        Privacy Policy
+
+                    </a>
+
+                </li>
+
+                <li>
+
+                    <a href="#">
+
+                        Terms of Service
+
+                    </a>
+
+                </li>
+
+                <li>
+
+                    <a href="#">
+
+                        Accessibility
+
+                    </a>
+
+                </li>
+
+            </ul>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ================= FOOTER BOTTOM ================= -->
+
+    <div class="footer-bottom">
+
+
+        <!-- Footer Logo -->
+
+        <div class="footer-logo">
+
+
+            <div class="footer-logo-circle">
+
+<img src="{{ url_for('static', filename='images/logo.png') }}">
+            </div>
+
+
+            <h2>
+
+                MP Events
+
+            </h2>
+
+        </div>
+
+
+
+        <!-- Copyright -->
+
+        <div class="copyright">
+
+            © 2026 Madhya Pradesh Event Portal.
+            All rights reserved.
+
+        </div>
+
+
+
+        <!-- Social Icons -->
+
+        <div class="social-icons">
+
+
+            <a href="#">
+
+                <i class="fa-brands fa-facebook-f"></i>
+
+            </a>
+
+
+            <a href="#">
+
+                <i class="fa-brands fa-instagram"></i>
+
+            </a>
+
+
+            <a href="#">
+
+                <i class="fa-brands fa-x-twitter"></i>
+
+            </a>
+
+
+            <a href="#">
+
+                <i class="fa-brands fa-linkedin-in"></i>
+
+            </a>
+
+        </div>
+
+    </div>
+
+</footer>
+<script
+src="{{ url_for('static', filename='js/script.js') }}">
+</script>
+</body>
+</html>

@@ -153,6 +153,7 @@ def signin():
 
             session["user_id"] = user.id
             session["user_name"] = user.name
+            print("USER ROLE =", user.role)
 
             return redirect(url_for("home"))
 
@@ -284,6 +285,7 @@ def booking():
 @app.route("/add-event", methods=["GET", "POST"])
 def add_event():
 
+
     if request.method == "POST":
         
 
@@ -327,6 +329,7 @@ def add_event():
 
         return redirect(url_for("admin"))
 
+    print("SESSION =", session)
     return render_template("add_event.html")
 
 @app.route("/recreate-db")

@@ -243,7 +243,7 @@ def create_admin():
         name="Admin",
         email="admin@mpevents.com",
         phone="9999999999",
-        password="admin123",
+        password="admin1234",
         role="admin"
     )
 
